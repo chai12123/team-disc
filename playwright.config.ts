@@ -1,0 +1,20 @@
+import { defineConfig, devices } from "@playwright/test";
+
+/** e2e ต่อ dev server ที่รันอยู่ (npm run dev) กับฐานข้อมูลที่ seed แล้ว */
+export default defineConfig({
+  testDir: "tests/e2e",
+  timeout: 120_000,
+  retries: 0,
+  reporter: [["list"]],
+  use: {
+    baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3000",
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+  },
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"], launchOptions: { executablePath: process.env.PW_CHROMIUM_PATH || undefined } },
+    },
+  ],
+});
